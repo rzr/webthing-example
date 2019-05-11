@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!--
+     Copyright 2019-present Samsung Electronics France SAS, and other contributors
+
+     curl -X PUT -d '{ "Hand": 45 }' https://webthing-iotjs-robot.glitch.me/properties/Hand
+
+  -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+    <script src="motor.js"></script>
+
+    <script>
+  if (false) {
+  setInterval(function() {
+  console.log('inteval');
+  var el = document.getElementById('foo');
+  var angle = Number(new Date());
+  el.setAttribute('motor', 'angle', Number(new Date()));
+  }, 1000);
+  }
+
+var url = 'https://rzr-webthing-example.glitch.me/properties';
+url = 'http://192.168.1.13:8888/properties';
+
+function update(id, type, url)
+{
+  fetch(url)
+  .then( response => { return response.json(); } )
+  .then( json => {
+    for (var property of Object.keys(json)) {
+      console.log(property + ': ' + json[property]);
+      document.getElementById(id).setAttribute(type, property, json[property]);
+  }})
+  .catch(function() { console.log('error: ') })
+}
+
+function start()
+{
+  setInterval(function() {
+    update('foo', 'motor', url);
+  }, 1000);
+  console.log(`usage: curl -X PUT -d '{ "angle": 42}' ${url}/angle`);
+}
+  
+</script>
+
+  </head>
+
+  <body
+   onload="start();">
+    <a-scene>
+
+      <a-entity id="foo" motor="angle: 45; color: green">
+      </a-entity>
+
+      <a-camera position="1 1 3">
+      </a-camera>
+
+
+    </a-scene>
+  </body>
+</html>
+
+
