@@ -1,0 +1,15 @@
+{
+  "name": "webthing-example",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Philippe Coval <p.coval@samsung.com>",
+  "license": "MPL-2.0",
+  "dependencies": {
+    "webthing-iotjs": "^0.11.0"
+  }
+}
