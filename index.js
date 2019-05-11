@@ -12,91 +12,52 @@
 var console = require('console'); // Disable logs here by editing to '!console.log'
 var log = console.log || function () {};
 var verbose = console.log || function () {};
+var webthing = require('webthing-iotjs');
 
-var webthing;
 
-try {
-  webthing = require('../webthing');
-} catch (err) {
-  webthing = require('webthing-iotjs');
-}
-
-var Property = webthing.Property;
-var Value = webthing.Value;
-
-var Thing = webthing.Thing;
-var WebThingServer = webthing.WebThingServer;
-var SingleThing = webthing.SingleThing; // Update with different board here if needed
-
-function AnglePropery(thing, name, value, metadata, config) {
+function AngleProperty(thing, name, value, metadata, config) {
   var self = this;
-  Property.call(this, thing, name || "Angle", new Value(Number(value)), {
-    title: metadata && metadata.title || "Level: ".concat(name),
-    type: 'number',
-    minimum: config.minimum || -180,
-    maximum: config.maximum || +180,
-    description: metadata && metadata.description || "Angle"
-  });
+  webthing.Property.call(this, thing,
+                         name || "Angle",
+                         new webthing.Value(Number(value)), {
+                           title: metadata && metadata.title || "Level: ".concat(name),
+                           type: 'number',
+                           minimum: config.minimum || -180,
+                           maximum: config.maximum || +180,
+                           description: metadata && metadata.description || "Angle"
+                         });
   {
     this.config = config;
     self.value.valueForwarder = function (value) {
       verbose('forward: ' + value);
     };
   }
-
-  this.close = function () {
-    vebose('close');
-  };
-
-  return this;
 }
 
-
-function PwmThing(name, type, description) {
+function AngleThing(name, type, description) {
   var self = this;
-  Thing.call(this, name || 'PWM', type || [], description || 'A web connected PWM');
+  webthing.Thing.call(this,
+                      name || 'Angle',
+                      type || [],
+                      description || 'A web connected Angle');
   {
-
-    var offset = .4;
-    var period = 20;
-    this.pinProperties = [
-      new AnglePropery(this, 'angle', 0, {
-        description: 'Angle'
-      }, {
-        minimum: -90,
-        maximum: +90,
-      })
-    ];
-
-    this.pinProperties.forEach(function (property) {
-      self.addProperty(property);
-    });
-
-
-    this.close = function () {
-      self.pinProperties.forEach(function (property) {
-        property.close && property.close();
-      });
-    };
+    this.addProperty(new AngleProperty(this, 'angle', 0, {
+      description: 'Angle'
+    }, {
+      minimum: -90,
+      maximum: +90,
+    }));
   }
 }
 
-var BoardThing = PwmThing;
 
 function App() {
   var port = process.argv[3] ? Number(process.argv[3]) : 8888;
   var url = "http://localhost:".concat(port);
-  var thing = new BoardThing();
-  var server = new WebThingServer(new SingleThing(thing), port);
+  var server = new webthing.WebThingServer
+  (new webthing.SingleThing(new AngleThing), port);
   process.on('SIGINT', function () {
     server.stop();
-
-    var cleanup = function () {
-      thing && thing.close();
-      process.exit();
-    };
-
-    cleanup();
   });
   console.log(url);
   server.start();
