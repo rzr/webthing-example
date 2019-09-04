@@ -24,13 +24,16 @@ var Value = webthing.Value;
 var WebThingServer = webthing.WebThingServer;
 
 function makeThing() {
-  var thing = new Thing('urn:dev:ops:my-actuator-1234', 'ActuatorExample', ['OnOffSwitch'], 'An actuator example that just log');
-  thing.addProperty(new Property(thing, 'on', new Value(true, function (update) {
+  var thing = new Thing('urn:dev:ops:my-level-actuator-1234', 
+    'LevelActuatorExample',
+    ['Level'],
+    'An actuator example that just log');
+  thing.addProperty(new Property(thing, 'level', new Value(0, function (update) {
     return console.log("change: ".concat(update));
   }), {
-    '@type': 'OnOffProperty',
-    title: 'On/Off',
-    type: 'boolean',
+    '@type': 'LevelProperty',
+    title: 'Level',
+    type: 'Number',
     description: 'Whether the output is changed'
   }));
   return thing;
@@ -40,8 +43,8 @@ function runServer() {
   var port = process.argv[2] ? Number(process.argv[2]) : 8888;
   var hostname = process.argv[3] ? String(process.argv[3]) : null;
   var sslOptions = process.argv[4] ? String(process.argv[4]) : null;
-  var url = "".concat(sslOptions ? 'https' : 'http', "://localhost:").concat(port, "/properties/on");
-  console.log("Usage:\n\n".concat(process.argv[0], " ").concat(process.argv[1], " [port]\n\nTry:\ncurl -X PUT -H 'Content-Type: application/json' --data '{\"on\": true }' ").concat(url, "\n"));
+  var url = "".concat(sslOptions ? 'https' : 'http', "://localhost:").concat(port, "/properties/level");
+  console.log("Usage:\n\n".concat(process.argv[0], " ").concat(process.argv[1], " [port]\n\nTry:\ncurl -X PUT -H 'Content-Type: application/json' --data '{\"level\": 100 }' ").concat(url, "\n"));
   var thing = makeThing();
   var server = new WebThingServer(new SingleThing(thing), port, hostname, sslOptions);
   process.on('SIGINT', function () {
