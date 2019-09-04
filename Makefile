@@ -38,8 +38,9 @@ deploy_dirs+= ${deploy_module_dir}
 deploy_dirs+= ${deploy_modules_dir}/webthing-iotjs
 deploy_srcs+= $(addprefix ${deploy_module_dir}/, ${srcs})
 
-property?=on
-property_value?=true
+property?=level
+property_value?=42
+
 
 run_args+="${port}"
 
