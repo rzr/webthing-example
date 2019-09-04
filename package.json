@@ -1,0 +1,30 @@
+{
+  "name": "webthing-example",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rzr/aframe-webthing.git"
+  },
+  "author": "Philippe Coval <p.coval@samsung.com> (https://www.npmjs.com/~rzr)",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/rzr/webthing-example/issues"
+  },
+  "homepage": "https://github.com/rzr/webthing-example#readme",
+  "dependencies": {
+    "webthing-iotjs": "^0.12.1-1"
+  },
+  "iotjs": {
+    "version": ">=1.0"
+  },
+  "keywords": [
+    "mqtt",
+    "iotjs-module",
+    "webthing"
+  ]
+}
