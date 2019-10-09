@@ -38,9 +38,9 @@ deploy_dirs+= ${deploy_module_dir}
 deploy_dirs+= ${deploy_modules_dir}/webthing-iotjs
 deploy_srcs+= $(addprefix ${deploy_module_dir}/, ${srcs})
 
-property?=on
+property_name?=on
 property_value?=true
-
+property_url?=${target_url}/properties/${property_name}
 run_args+="${port}"
 
 
@@ -86,12 +86,12 @@ client/test:
 	@echo
 	curl ${target_url}/properties
 	@echo
-	curl ${target_url}/properties/${property}
+	curl ${property_url}
 	@echo
 	curl -H "Content-Type: application/json" -X PUT \
- --data '{"${property}": ${property_value}}' \
- "http://localhost:8888/properties/${property}"
-	curl ${target_url}/properties/${property}
+ --data '{"${property_name}": ${property_value}}' \
+ "${property_url}"
+	curl ${property_url}
 	@echo
 
 node_modules: package.json
